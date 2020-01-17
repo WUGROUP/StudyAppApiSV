@@ -1,4 +1,5 @@
 import express from 'express'
+import { TextBoxControl } from './control/text-box-control'
 
 const app: express.Express = express()
 
@@ -15,11 +16,16 @@ app.use(express.urlencoded({ extended: true }))
 
 // GetとPostのルーティング
 const router: express.Router = express.Router()
-router.get('/api/GetAllInfos', (req: express.Request, res: express.Response) => {
+router.get('/GetTopInfos/', (req: express.Request, res: express.Response) => {
+    console.log('start GetTopInfos');
     res.send(req.query)
+    console.log('end GetTopInfos');
 });
-router.post('/api/InsertWords', (req: express.Request, res: express.Response) => {
-    res.send(req.body)
+router.all('/TextBoox', (req: express.Request, res: express.Response) => {
+    console.log('start TextBoox');
+    const control = new TextBoxControl(req, res);
+    control.processRequest();
+    console.log('end TextBoox');
 });
 router.post('/api/EditSentence', (req: express.Request, res: express.Response) => {
     res.send(req.body)
