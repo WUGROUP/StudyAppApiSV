@@ -7,19 +7,10 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch via NPM",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run-script",
-                "debug"
-            ],
-            "port": 9229
-        },
-        {
-            "type": "node",
-            "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/index.js",
+            "preLaunchTask": "tsc",
+            "program": "${workspaceFolder}/index.ts",
+            "smartStep": true,
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

@@ -18,19 +18,20 @@ export class BaseControl {
                 this.update();
                 return;
             case Action.selectAll:
-                this.delete();
+                this.selectAll();
                 return;
             default:
-                this.execute();
+                this.execute(action);
                 return;
         }
     }
 
-    protected execute() { }
+    protected execute(action: string) { }
 
 
-    private toAction(): Action {
-        const action = this.req.params['ACTION'];
+    private toAction(): Action | string {
+        const action = this.req.query['ACTION'];
+        console.debug(`Action is ${action}`);
         switch (action) {
             case 'INSERT':
                 return Action.insert;
@@ -38,8 +39,10 @@ export class BaseControl {
                 return Action.delete;
             case 'UPDATE':
                 return Action.update;
-            default:
+            case 'SELECT_ALL':
                 return Action.selectAll;
+            default:
+                return action;
         }
     }
 

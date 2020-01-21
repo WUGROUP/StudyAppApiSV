@@ -1,5 +1,7 @@
-import express from 'express'
-import { TextBoxControl } from './control/text-box-control'
+import express from 'express';
+import { TextBoxControl } from './control/text-box-control';
+import { ContentInfoControl } from './control/content-info-control';
+import { MainInfoControl } from './control/main-info-control';
 
 const app: express.Express = express()
 
@@ -21,14 +23,36 @@ router.get('/GetTopInfos/', (req: express.Request, res: express.Response) => {
     res.send(req.query)
     console.log('end GetTopInfos');
 });
-router.all('/TextBoox', (req: express.Request, res: express.Response) => {
+
+router.get('/TextBoox', (req: express.Request, res: express.Response) => {
     console.log('start TextBoox');
+    console.log(req.body);
     const control = new TextBoxControl(req, res);
     control.processRequest();
     console.log('end TextBoox');
 });
-router.post('/api/EditSentence', (req: express.Request, res: express.Response) => {
-    res.send(req.body)
+
+router.post('/TextBoox', (req: express.Request, res: express.Response) => {
+    console.log('start TextBoox');
+    console.log(req.body);
+    const control = new TextBoxControl(req, res);
+    control.processRequest();
+    console.log('end TextBoox');
+});
+router.post('/ContentInfo', (req: express.Request, res: express.Response) => {
+    console.log('start ContentInfo');
+    console.log(req.body);
+    const control = new ContentInfoControl(req, res);
+    control.processRequest();
+    console.log('end ContentInfo');
+});
+
+router.post('/MainInfo', (req: express.Request, res: express.Response) => {
+    console.log('start MainInfo');
+    console.log(req.body);
+    const control = new MainInfoControl(req, res);
+    control.processRequest();
+    console.log('end MainInfo');
 });
 
 

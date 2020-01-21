@@ -1,26 +1,34 @@
 import { DbUtils } from "../db/dbutils";
 import { TextBoxInfo } from "../dto/text-box";
+import { MainInfo } from "../dto/main-info";
 
-export class TextBoxInfoDao {
+export class MainInfoDao {
     public static SELECT_SQL = `
         select 
-           id,title,courseCount,createdDate 
+           id,title,bookId,courseIndex,type,summary,createdDate
         from 
-           textBookInfo 
+           mainInfo 
         order by 
             createdDate
     `;
-
+    public static SELECT_BY_BOOKINFO_SQL = `
+        select 
+           id,title,bookId,courseIndex,type,summary,createdDate
+        from 
+           mainInfo 
+        where 
+           bookId=? and courseIndex=?
+    `;
     public static INSERT_SQL = `
-        insert into textBookInfo(title,courseCount) values(?,?);
+        insert into mainInfo(title,bookId,courseIndex,type) values(?,?,?,?);
     `;
 
     public static DELETE_SQL = `
-        delete from textBookInfo where id in (?)
+        delete from mainInfo where id in (?)
     `;
 
     public static UPDATE_SQL = `
-        update  textBookInfo set title=?,courseCount =? where id = ?
+        update  mainInfo set summary=? where id = ?
     `;
 
     public static selectAll() {
@@ -52,11 +60,30 @@ export class TextBoxInfoDao {
         );
     }
 
-    public static insert(info: TextBoxInfo) {
+    public static selectByBookInfo(mainInfo: MainInfo) {
         return new Promise((resolve, reject) => {
             const db = DbUtils.DbInstance;
             db.serialize(() => {
-                db.run(this.INSERT_SQL, [info.title, info.courseCount], (error) => {
+                db.all(this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex], (error, rows) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
+
+    public static insert(mainInfo: MainInfo) {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.run(this.INSERT_SQL, [mainInfo.title, mainInfo.bookId, mainInfo.courseIndex, mainInfo.type], (error) => {
                     if (error) {
                         console.error('Error!', error);
                         reject(error);

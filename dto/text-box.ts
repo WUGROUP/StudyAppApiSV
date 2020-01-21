@@ -1,5 +1,5 @@
 export class TextBoxInfo {
     public id!: number;
-    public titile!: string;
+    public title!: string;
     public courseCount!: number;
 }
