@@ -28,6 +28,39 @@ export class ContentInfoDao {
                 b.id
     `;
 
+
+    private static readonly SELECT_BY_ID = `
+            SELECT 
+                id,
+                mainId,
+                content,
+                content1,
+                content2 
+            FROM
+                contentInfo
+            WHERE
+                id=?
+    `;
+
+
+    private static readonly INSERT = `
+            INSERT INTO  contentInfo (
+                mainId,
+                content,
+                content1,
+                content2 
+                )
+                VALUES 
+    `;
+
+    public static DELETE_SQL = `
+        delete from contentInfo where id in (?)
+    `;
+
+    public static UPDATE_SQL = `
+        update  contentInfo set content=?,content1 =?,content2 =? where id = ?
+    `;
+
     public static selectByBookInfo(contentInfo: ContentInfo) {
         return new Promise((resolve, reject) => {
             const db = DbUtils.DbInstance;
@@ -49,6 +82,72 @@ export class ContentInfoDao {
                         //     }
                         // )
                         resolve(rows);
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
+
+    public static insert(contentInfos: ContentInfo[]) {
+        let insertSQL = this.INSERT;
+        for (let i = 0; i < contentInfos.length; i++) {
+            if (i > 0) {
+                insertSQL = insertSQL + ','
+            }
+            insertSQL = insertSQL + `(${contentInfos[i].mainId},'${contentInfos[i].content}','${contentInfos[i].content1}','${contentInfos[i].content2}')`
+        }
+
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.run(insertSQL, null, (error) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+            db.close();
+        });
+    }
+
+    public static delete(ids: number[]) {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                const sql = this.DELETE_SQL.replace('?', ids.join(','));
+                db.run(sql, (error) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
+
+
+    public static update(info: ContentInfo) {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.run(this.UPDATE_SQL, [info.content, info.content1, info.content2, info.id], (error) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve();
                     }
                 });
             });

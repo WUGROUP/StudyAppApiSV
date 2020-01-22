@@ -43,7 +43,7 @@ var MainInfoControl = /** @class */ (function (_super) {
     MainInfoControl.prototype.insert = function () {
         var _this = this;
         main_info_dao_1.MainInfoDao.insert(this.req.body).then(function () {
-            _this.res.send({ result: 'OK' });
+            _this.res.send(_this.OK_RES);
         }).catch(function () {
             _this.res.sendStatus(500);
         });
@@ -59,7 +59,7 @@ var MainInfoControl = /** @class */ (function (_super) {
     MainInfoControl.prototype.delete = function () {
         var _this = this;
         main_info_dao_1.MainInfoDao.delete(this.req.body).then(function () {
-            _this.res.send({ result: 'OK' });
+            _this.res.send(_this.OK_RES);
         }).catch(function () {
             _this.res.sendStatus(500);
         });
@@ -67,7 +67,7 @@ var MainInfoControl = /** @class */ (function (_super) {
     MainInfoControl.prototype.update = function () {
         var _this = this;
         main_info_dao_1.MainInfoDao.update(this.req.body).then(function () {
-            _this.res.send({ result: 'OK' });
+            _this.res.send(_this.OK_RES);
         }).catch(function () {
             _this.res.sendStatus(500);
         });

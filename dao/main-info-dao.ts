@@ -85,15 +85,25 @@ export class MainInfoDao {
             db.serialize(() => {
                 db.run(this.INSERT_SQL, [mainInfo.title, mainInfo.bookId, mainInfo.courseIndex, mainInfo.type], (error) => {
                     if (error) {
+                        db.close();
                         console.error('Error!', error);
                         reject(error);
                         return;
                     } else {
-                        resolve();
+                        db.all(this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex], (error, rows) => {
+                            if (error) {
+                                db.close();
+                                console.error('Error!', error);
+                                reject(error);
+                                return;
+                            } else {
+                                resolve(rows);
+                                db.close();
+                            }
+                        });
                     }
                 });
             });
-            db.close();
         }
         );
     }

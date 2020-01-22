@@ -32,7 +32,7 @@ export class MainInfoControl extends BaseControl {
     protected insert() {
         MainInfoDao.insert(this.req.body).then(
             () => {
-                this.res.send({ result: 'OK' });
+                this.res.send(this.OK_RES);
             }
         ).catch(
             () => {
@@ -56,7 +56,7 @@ export class MainInfoControl extends BaseControl {
     protected delete() {
         MainInfoDao.delete(this.req.body).then(
             () => {
-                this.res.send({ result: 'OK' });
+                this.res.send(this.OK_RES);
             }
         ).catch(
             () => {
@@ -68,7 +68,7 @@ export class MainInfoControl extends BaseControl {
     protected update() {
         MainInfoDao.update(this.req.body).then(
             () => {
-                this.res.send({ result: 'OK' });
+                this.res.send(this.OK_RES);
             }
         ).catch(
             () => {

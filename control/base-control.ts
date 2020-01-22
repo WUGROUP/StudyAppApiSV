@@ -61,4 +61,7 @@ export class BaseControl {
     protected selectAll() {
 
     }
+
+    protected OK_RES = { result: 'OK' };
+    protected NG_RES = { result: 'NG' };
 }

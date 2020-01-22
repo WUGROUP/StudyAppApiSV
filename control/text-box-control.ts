@@ -10,7 +10,7 @@ export class TextBoxControl extends BaseControl {
     protected insert() {
         TextBoxInfoDao.insert(this.req.body).then(
             () => {
-                this.res.send({ result: 'OK' });
+                this.res.send(this.OK_RES);
             }
         ).catch(
             () => {
@@ -34,7 +34,7 @@ export class TextBoxControl extends BaseControl {
     protected delete() {
         TextBoxInfoDao.delete(this.req.body).then(
             () => {
-                this.res.send({ result: 'OK' });
+                this.res.send(this.OK_RES);
             }
         ).catch(
             () => {
@@ -46,7 +46,7 @@ export class TextBoxControl extends BaseControl {
     protected update() {
         TextBoxInfoDao.update(this.req.body).then(
             () => {
-                this.res.send({ result: 'OK' });
+                this.res.send(this.OK_RES);
             }
         ).catch(
             () => {
