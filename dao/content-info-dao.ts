@@ -102,7 +102,7 @@ export class ContentInfoDao {
         return new Promise((resolve, reject) => {
             const db = DbUtils.DbInstance;
             db.serialize(() => {
-                db.run(insertSQL, null, (error) => {
+                db.run(insertSQL, (error) => {
                     if (error) {
                         console.error('Error!', error);
                         reject(error);

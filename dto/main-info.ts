@@ -6,4 +6,5 @@ export class MainInfo {
     public courseIndex!: number;
     public type!: number;
     public summary!: number;
+    public contentsCount!: number;
 }

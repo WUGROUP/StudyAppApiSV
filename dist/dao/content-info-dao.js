@@ -44,7 +44,7 @@ var ContentInfoDao = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var db = dbutils_1.DbUtils.DbInstance;
             db.serialize(function () {
-                db.run(insertSQL, null, function (error) {
+                db.run(insertSQL, function (error) {
                     if (error) {
                         console.error('Error!', error);
                         reject(error);

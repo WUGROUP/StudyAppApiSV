@@ -18,6 +18,7 @@ var content_info_dao_1 = require("../dao/content-info-dao");
 var main_info_1 = require("../dto/main-info");
 var main_info_dao_1 = require("../dao/main-info-dao");
 var util_1 = require("util");
+var app_utils_1 = require("../utils/app-utils");
 var ContentInfoControl = /** @class */ (function (_super) {
     __extends(ContentInfoControl, _super);
     function ContentInfoControl(req, res) {
@@ -63,16 +64,13 @@ var ContentInfoControl = /** @class */ (function (_super) {
         var deleteInfoPromise = null;
         var updateInfoPromise = null;
         var saveInfo = this.req.body;
-        if (saveInfo.noMainInfoFlg) {
-            // save main info
-            var mainInfo = new main_info_1.MainInfo();
-            mainInfo.bookId = saveInfo.bookId;
-            mainInfo.courseIndex = saveInfo.courseIndex;
-            mainInfo.type = saveInfo.type;
-            mainInfo.title = saveInfo.title;
-            main_info_dao_1.MainInfoDao.insert(mainInfo).then(function (res) {
-                var tmp = res;
-                saveInfo.mainId = tmp[0].id;
+        var mainInfo = new main_info_1.MainInfo();
+        mainInfo.bookId = saveInfo.bookId;
+        mainInfo.courseIndex = saveInfo.courseIndex;
+        mainInfo.type = saveInfo.type;
+        main_info_dao_1.MainInfoDao.selectByBookInfo(mainInfo).then(function (rows) {
+            var tmp = rows;
+            if (tmp.length > 0) {
                 saveInfoPromise = _this.saveNewInfos(saveInfo.mainId, saveInfo.infos);
                 deleteInfoPromise = _this.deleteInfos(saveInfo.infos);
                 updateInfoPromise = _this.updateInfos(saveInfo.infos);
@@ -82,19 +80,31 @@ var ContentInfoControl = /** @class */ (function (_super) {
                     console.error(error);
                     _this.res.sendStatus(500);
                 });
-            }).catch(function () { return _this.res.sendStatus(500); });
-        }
-        else {
-            saveInfoPromise = this.saveNewInfos(saveInfo.mainId, saveInfo.infos);
-            deleteInfoPromise = this.saveNewInfos(saveInfo.mainId, saveInfo.infos);
-            updateInfoPromise = this.saveNewInfos(saveInfo.mainId, saveInfo.infos);
-            Promise.all([saveInfoPromise, deleteInfoPromise, updateInfoPromise]).then(function () {
-                _this.res.send(_this.OK_RES);
-            }).catch(function (error) {
-                console.error(error);
-                _this.res.sendStatus(500);
-            });
-        }
+            }
+            else {
+                // save main info
+                var mainInfo_1 = new main_info_1.MainInfo();
+                mainInfo_1.bookId = saveInfo.bookId;
+                mainInfo_1.courseIndex = saveInfo.courseIndex;
+                mainInfo_1.type = saveInfo.type;
+                mainInfo_1.title = saveInfo.title;
+                main_info_dao_1.MainInfoDao.insert(mainInfo_1).then(function (res) {
+                    var tmp = res;
+                    saveInfo.mainId = tmp[0].id;
+                    saveInfoPromise = _this.saveNewInfos(saveInfo.mainId, saveInfo.infos);
+                    deleteInfoPromise = _this.deleteInfos(saveInfo.infos);
+                    updateInfoPromise = _this.updateInfos(saveInfo.infos);
+                    Promise.all([saveInfoPromise, deleteInfoPromise, updateInfoPromise]).then(function () {
+                        _this.res.send(_this.OK_RES);
+                    }).catch(function (error) {
+                        console.error(error);
+                        _this.res.sendStatus(500);
+                    });
+                }).catch(function () { return _this.res.sendStatus(500); });
+            }
+        }).catch(function () {
+            _this.res.sendStatus(500);
+        });
     };
     ContentInfoControl.prototype.saveNewInfos = function (mainId, infos) {
         var newList = infos.filter(function (v) {
@@ -109,7 +119,7 @@ var ContentInfoControl = /** @class */ (function (_super) {
         return content_info_dao_1.ContentInfoDao.insert(newList);
     };
     ContentInfoControl.prototype.deleteInfos = function (infos) {
-        var deleteList = infos.filter(function (v) { return util_1.isNullOrUndefined(v.content) && !util_1.isNullOrUndefined(v.id); }).map(function (info) {
+        var deleteList = infos.filter(function (v) { return app_utils_1.AppUtils.isNullorEmpty(v.content) && !util_1.isNullOrUndefined(v.id); }).map(function (info) {
             return info.id;
         });
         if (util_1.isNullOrUndefined(deleteList) || deleteList.length === 0) {
@@ -118,7 +128,7 @@ var ContentInfoControl = /** @class */ (function (_super) {
         return content_info_dao_1.ContentInfoDao.delete(deleteList);
     };
     ContentInfoControl.prototype.updateInfos = function (infos) {
-        var updateList = infos.filter(function (v) { return !util_1.isNullOrUndefined(v.content) && !util_1.isNullOrUndefined(v.id); });
+        var updateList = infos.filter(function (v) { return !app_utils_1.AppUtils.isNullorEmpty(v.content) && !util_1.isNullOrUndefined(v.id); });
         if (util_1.isNullOrUndefined(updateList) || updateList.length === 0) {
             return null;
         }

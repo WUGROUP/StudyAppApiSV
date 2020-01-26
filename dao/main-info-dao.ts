@@ -17,7 +17,7 @@ export class MainInfoDao {
         from 
            mainInfo 
         where 
-           bookId=? and courseIndex=?
+           bookId=? and courseIndex=? and type=?
     `;
     public static INSERT_SQL = `
         insert into mainInfo(title,bookId,courseIndex,type) values(?,?,?,?);
@@ -64,7 +64,7 @@ export class MainInfoDao {
         return new Promise((resolve, reject) => {
             const db = DbUtils.DbInstance;
             db.serialize(() => {
-                db.all(this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex], (error, rows) => {
+                db.all(this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex, mainInfo.type], (error, rows) => {
                     if (error) {
                         console.error('Error!', error);
                         reject(error);
@@ -90,7 +90,7 @@ export class MainInfoDao {
                         reject(error);
                         return;
                     } else {
-                        db.all(this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex], (error, rows) => {
+                        db.all(this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex, mainInfo.type], (error, rows) => {
                             if (error) {
                                 db.close();
                                 console.error('Error!', error);

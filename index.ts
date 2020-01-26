@@ -2,6 +2,7 @@ import express from 'express';
 import { TextBoxControl } from './control/text-box-control';
 import { ContentInfoControl } from './control/content-info-control';
 import { MainInfoControl } from './control/main-info-control';
+import { TestManagerControl } from './control/test-manager-control';
 
 const app: express.Express = express()
 
@@ -53,6 +54,14 @@ router.post('/MainInfo', (req: express.Request, res: express.Response) => {
     const control = new MainInfoControl(req, res);
     control.processRequest();
     console.log('end MainInfo');
+});
+
+router.post('/TestManager', (req: express.Request, res: express.Response) => {
+    console.log('start TestManager');
+    console.log(req.body);
+    const control = new TestManagerControl(req, res);
+    control.processRequest();
+    console.log('end TestManager');
 });
 
 

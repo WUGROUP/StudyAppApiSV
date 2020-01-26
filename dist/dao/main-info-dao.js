@@ -38,7 +38,7 @@ var MainInfoDao = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var db = dbutils_1.DbUtils.DbInstance;
             db.serialize(function () {
-                db.all(_this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex], function (error, rows) {
+                db.all(_this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex, mainInfo.type], function (error, rows) {
                     if (error) {
                         console.error('Error!', error);
                         reject(error);
@@ -65,7 +65,7 @@ var MainInfoDao = /** @class */ (function () {
                         return;
                     }
                     else {
-                        db.all(_this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex], function (error, rows) {
+                        db.all(_this.SELECT_BY_BOOKINFO_SQL, [mainInfo.bookId, mainInfo.courseIndex, mainInfo.type], function (error, rows) {
                             if (error) {
                                 db.close();
                                 console.error('Error!', error);
@@ -122,7 +122,7 @@ var MainInfoDao = /** @class */ (function () {
         });
     };
     MainInfoDao.SELECT_SQL = "\n        select \n           id,title,bookId,courseIndex,type,summary,createdDate\n        from \n           mainInfo \n        order by \n            createdDate\n    ";
-    MainInfoDao.SELECT_BY_BOOKINFO_SQL = "\n        select \n           id,title,bookId,courseIndex,type,summary,createdDate\n        from \n           mainInfo \n        where \n           bookId=? and courseIndex=?\n    ";
+    MainInfoDao.SELECT_BY_BOOKINFO_SQL = "\n        select \n           id,title,bookId,courseIndex,type,summary,createdDate\n        from \n           mainInfo \n        where \n           bookId=? and courseIndex=? and type=?\n    ";
     MainInfoDao.INSERT_SQL = "\n        insert into mainInfo(title,bookId,courseIndex,type) values(?,?,?,?);\n    ";
     MainInfoDao.DELETE_SQL = "\n        delete from mainInfo where id in (?)\n    ";
     MainInfoDao.UPDATE_SQL = "\n        update  mainInfo set summary=? where id = ?\n    ";
