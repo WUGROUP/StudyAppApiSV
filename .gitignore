@@ -1839,3 +1839,14 @@ dist/dto/top-info.js
 dist/dto/top-info.js.map
 dist/type/types-def.js
 dist/type/types-def.js.map
+node_modules/@types/node/ts3.5/fs.d.ts
+node_modules/@types/node/ts3.5/globals.d.ts
+node_modules/@types/node/ts3.5/index.d.ts
+node_modules/@types/node/ts3.5/util.d.ts
+node_modules/@types/node/ts3.5/wasi.d.ts
+node_modules/fast-deep-equal/react.d.ts
+node_modules/fast-deep-equal/react.js
+node_modules/fast-deep-equal/es6/index.d.ts
+node_modules/fast-deep-equal/es6/index.js
+node_modules/fast-deep-equal/es6/react.d.ts
+node_modules/fast-deep-equal/es6/react.js

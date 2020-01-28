@@ -11,6 +11,31 @@ export class SummaryTestInfoDao {
         select id from summaryTestInfo where title = ? order by createdDate desc
     `;
 
+    public static SELECT_ALL_TODO_LIST = `
+                SELECT
+                    a.id,
+                    a.title
+                    c.id as mainId;
+                    c.title as mainTitle,
+                    c.type,
+                case when c.type=1 then (select count(*) from contentInfo d where a.id=d.mainId and c.type = 1) 
+                when c.type = 2 then (select count(*) from contentInfo e where a.id=e.mainId and c.type = 2)
+                end as contentsCount
+                FROM
+                    summaryTestInfo a
+                JOIN 
+                    testRelationInfo b
+                ON 
+                    a.id = b.summaryId
+                JOIN
+                    mainInfo c
+                ON
+                    b.mainId = c.id
+
+                GROUP BY
+                a.title,c.title
+    `;
+
     public static insert<T>(title: string) {
         return new Promise<T>((resolve, reject) => {
             const db = DbUtils.DbInstance;
@@ -38,6 +63,25 @@ export class SummaryTestInfoDao {
             });
         }
         );
+
     }
 
+    public static getAllTodoList() {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.all(this.SELECT_ALL_TODO_LIST, (error, rows) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
 }
