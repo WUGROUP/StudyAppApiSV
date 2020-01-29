@@ -14,8 +14,8 @@ export class SummaryTestInfoDao {
     public static SELECT_ALL_TODO_LIST = `
                 SELECT
                     a.id,
-                    a.title
-                    c.id as mainId;
+                    a.title,
+                    c.id as mainId,
                     c.title as mainTitle,
                     c.type,
                 case when c.type=1 then (select count(*) from contentInfo d where a.id=d.mainId and c.type = 1) 
