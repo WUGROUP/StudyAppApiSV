@@ -14,12 +14,14 @@ export class SummaryTestInfoDao {
     public static SELECT_ALL_TODO_LIST = `
                 SELECT
                     a.id,
+					b.mainId,
                     a.title,
+				    a.score,
                     c.id as mainId,
                     c.title as mainTitle,
                     c.type,
-                case when c.type=1 then (select count(*) from contentInfo d where a.id=d.mainId and c.type = 1) 
-                when c.type = 2 then (select count(*) from contentInfo e where a.id=e.mainId and c.type = 2)
+                case when c.type=1 then (select count(*) from contentInfo d where b.mainId=d.mainId and c.type = 1) 
+                when c.type = 2 then (select count(*) from contentInfo e where b.mainId=e.mainId and c.type = 2)
                 end as contentsCount
                 FROM
                     summaryTestInfo a
@@ -31,9 +33,44 @@ export class SummaryTestInfoDao {
                     mainInfo c
                 ON
                     b.mainId = c.id
-
+                WHERE
+				    a.score is null
                 GROUP BY
                 a.title,c.title
+    `;
+
+    private static readonly SELECT_TEST_INFO_BY_ID =
+        `
+    SELECT
+                    a.id,
+					b.mainId,
+                    a.title,
+				    a.score,
+                    c.id as mainId,
+                    c.title as mainTitle,
+                    c.type,
+                    d.id as contentId,
+					d.content,
+					d.content1,
+					d.content2
+                FROM
+                    summaryTestInfo a
+                JOIN 
+                    testRelationInfo b
+                ON 
+                    a.id = b.summaryId
+                JOIN
+                    mainInfo c
+                ON
+                    b.mainId = c.id
+				JOIN
+				   contentInfo d
+				ON
+				   d.mainId = b.mainId
+                WHERE
+				    a.id = ?
+				ORDER BY
+				    c.type,mainTitle
     `;
 
     public static insert<T>(title: string) {
@@ -71,6 +108,25 @@ export class SummaryTestInfoDao {
             const db = DbUtils.DbInstance;
             db.serialize(() => {
                 db.all(this.SELECT_ALL_TODO_LIST, (error, rows) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
+
+    public static getTestInfosById(id: { summaryId: number }) {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.all(this.SELECT_TEST_INFO_BY_ID, [id.summaryId], (error, rows) => {
                     if (error) {
                         console.error('Error!', error);
                         reject(error);

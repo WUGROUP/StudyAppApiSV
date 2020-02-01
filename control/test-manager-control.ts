@@ -16,10 +16,28 @@ export class TestManagerControl extends BaseControl {
             case 'TODO_LIST':
                 this.getAllTodoList();
                 return;
+            case 'TEST_LIST':
+                this.getAllTestInfos();
+                return;
             default:
                 return
         }
     }
+
+
+    protected getAllTestInfos() {
+        SummaryTestInfoDao.getTestInfosById(this.req.body).then(
+            (res) => {
+                this.res.json(res);
+            }
+        ).catch(
+            () => {
+                this.res.sendStatus(500);
+            }
+        )
+    }
+
+
     protected selectAll() {
         TestManagerDao.selectAll(this.req.body).then(
             (res) => {

@@ -32,9 +32,20 @@ var TestManagerControl = /** @class */ (function (_super) {
             case 'TODO_LIST':
                 this.getAllTodoList();
                 return;
+            case 'TEST_LIST':
+                this.getAllTestInfos();
+                return;
             default:
                 return;
         }
+    };
+    TestManagerControl.prototype.getAllTestInfos = function () {
+        var _this = this;
+        summary_test_info_dao_1.SummaryTestInfoDao.getTestInfosById(this.req.body).then(function (res) {
+            _this.res.json(res);
+        }).catch(function () {
+            _this.res.sendStatus(500);
+        });
     };
     TestManagerControl.prototype.selectAll = function () {
         var _this = this;
