@@ -97,11 +97,37 @@ var ContentInfoDao = /** @class */ (function () {
             db.close();
         });
     };
+    ContentInfoDao.insertContentRes = function (res) {
+        var insertSQL = this.INSERT_RES;
+        for (var i = 0; i < res.length; i++) {
+            if (i > 0) {
+                insertSQL = insertSQL + ',';
+            }
+            insertSQL = insertSQL + ("(" + res[i].summaryId + ",'" + res[i].mainId + "','" + res[i].contentId + "','" + res[i].answer + "')");
+        }
+        return new Promise(function (resolve, reject) {
+            var db = dbutils_1.DbUtils.DbInstance;
+            db.serialize(function () {
+                db.run(insertSQL, function (error) {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+            db.close();
+        });
+    };
     ContentInfoDao.SELECT_BY_BOOKINFO_SQL = "\n            SELECT \n                b.id,\n                a.id as mainId,\n                a.bookId,\n                a.courseIndex,\n                b.content,\n                b.content1,\n                b.content2\n            FROM\n                mainInfo a\n            JOIN \n                contentInfo b\n            ON \n                a.id = b.mainId\n            WHERE\n                a.bookId=?\n            AND\n                a.courseIndex=?\n            AND\n                a.type=?\n            ORDER BY\n                b.id\n    ";
     ContentInfoDao.SELECT_BY_ID = "\n            SELECT \n                id,\n                mainId,\n                content,\n                content1,\n                content2 \n            FROM\n                contentInfo\n            WHERE\n                id=?\n    ";
     ContentInfoDao.INSERT = "\n            INSERT INTO  contentInfo (\n                mainId,\n                content,\n                content1,\n                content2 \n                )\n                VALUES \n    ";
     ContentInfoDao.DELETE_SQL = "\n        delete from contentInfo where id in (?)\n    ";
     ContentInfoDao.UPDATE_SQL = "\n        update  contentInfo set content=?,content1 =?,content2 =? where id = ?\n    ";
+    ContentInfoDao.INSERT_RES = "\n        INSERT INTO  contentResInfo (\n            summaryId,\n            mainId,\n            contentId,\n            answer\n        ) VALUES\n    ";
     return ContentInfoDao;
 }());
 exports.ContentInfoDao = ContentInfoDao;

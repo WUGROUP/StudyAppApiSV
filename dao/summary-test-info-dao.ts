@@ -1,5 +1,6 @@
-import { SummaryTestInfoDto } from "../dto/summary-test-info";
+
 import { DbUtils } from "../db/dbutils";
+import { TestInfo } from "../dto/test-info";
 
 export class SummaryTestInfoDao {
 
@@ -39,10 +40,39 @@ export class SummaryTestInfoDao {
                 a.title,c.title
     `;
 
+    public static SELECT_ALL_TESTED_LIST = `
+                SELECT
+                    a.id,
+					b.mainId,
+                    a.title,
+                    a.score,
+                    a.costTime as costedTime,
+                    c.id as mainId,
+                    c.title as mainTitle,
+                    c.type,
+                case when c.type=1 then (select count(*) from contentInfo d where b.mainId=d.mainId and c.type = 1) 
+                when c.type = 2 then (select count(*) from contentInfo e where b.mainId=e.mainId and c.type = 2)
+                end as contentsCount
+                FROM
+                    summaryTestInfo a
+                JOIN 
+                    testRelationInfo b
+                ON 
+                    a.id = b.summaryId
+                JOIN
+                    mainInfo c
+                ON
+                    b.mainId = c.id
+                WHERE
+				    a.score is not null
+                GROUP BY
+                a.title,c.title
+    `;
+
     private static readonly SELECT_TEST_INFO_BY_ID =
         `
     SELECT
-                    a.id,
+                    a.id as summaryId,
 					b.mainId,
                     a.title,
 				    a.score,
@@ -72,6 +102,15 @@ export class SummaryTestInfoDao {
 				ORDER BY
 				    c.type,mainTitle
     `;
+
+    private static readonly UPDATE_TEST_RES =
+        `
+        update summaryTestInfo 
+        set score = ? ,
+        costTime = ?
+        where 
+          id = ?
+    `
 
     public static insert<T>(title: string) {
         return new Promise<T>((resolve, reject) => {
@@ -133,6 +172,44 @@ export class SummaryTestInfoDao {
                         return;
                     } else {
                         resolve(rows);
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
+
+    public static getTestedList() {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.all(this.SELECT_ALL_TESTED_LIST, (error, rows) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+            db.close();
+        }
+        );
+    }
+
+    public static updateTestResById(testRes: { score: number; costTime: number; res: TestInfo[] }) {
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.run(this.UPDATE_TEST_RES, [testRes.score, testRes.costTime, testRes.res[0].summaryId], (error) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve(true);
                     }
                 });
             });

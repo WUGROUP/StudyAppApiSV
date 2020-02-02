@@ -19,6 +19,7 @@ var summary_test_info_dao_1 = require("../dao/summary-test-info-dao");
 var test_relation_info_dao_1 = require("../dao/test-relation-info-dao");
 var summary_test_info_1 = require("../dto/summary-test-info");
 var main_info_1 = require("../dto/main-info");
+var content_info_dao_1 = require("../dao/content-info-dao");
 var TestManagerControl = /** @class */ (function (_super) {
     __extends(TestManagerControl, _super);
     function TestManagerControl(req, res) {
@@ -35,6 +36,12 @@ var TestManagerControl = /** @class */ (function (_super) {
             case 'TEST_LIST':
                 this.getAllTestInfos();
                 return;
+            case 'SAVE_TEST':
+                this.saveTestRes();
+                return;
+            case 'TESTED_LIST':
+                this.getAllTestedList();
+                return;
             default:
                 return;
         }
@@ -43,6 +50,23 @@ var TestManagerControl = /** @class */ (function (_super) {
         var _this = this;
         summary_test_info_dao_1.SummaryTestInfoDao.getTestInfosById(this.req.body).then(function (res) {
             _this.res.json(res);
+        }).catch(function () {
+            _this.res.sendStatus(500);
+        });
+    };
+    TestManagerControl.prototype.saveTestRes = function () {
+        var _this = this;
+        var resInfo = this.req.body;
+        summary_test_info_dao_1.SummaryTestInfoDao.updateTestResById(resInfo).then(function () {
+            _this.saveContentsRes(resInfo.res);
+        }).catch(function () {
+            _this.res.sendStatus(500);
+        });
+    };
+    TestManagerControl.prototype.saveContentsRes = function (res) {
+        var _this = this;
+        content_info_dao_1.ContentInfoDao.insertContentRes(res).then(function () {
+            _this.res.json(true);
         }).catch(function () {
             _this.res.sendStatus(500);
         });
@@ -87,6 +111,36 @@ var TestManagerControl = /** @class */ (function (_super) {
                     summaryTestInfo.title = info.title;
                     summaryTestInfo.mainInfos = new Array();
                     res.push(summaryTestInfo);
+                }
+                var mainInfo = new main_info_1.MainInfo();
+                mainInfo.id = info.mainId;
+                mainInfo.title = info.mainTitle;
+                mainInfo.type = info.type;
+                mainInfo.contentsCount = info.contentsCount;
+                summaryTestInfo.mainInfos.push(mainInfo);
+            });
+            _this.res.json(res);
+        }, function (error) {
+            _this.res.sendStatus(500);
+        });
+    };
+    TestManagerControl.prototype.getAllTestedList = function () {
+        var _this = this;
+        summary_test_info_dao_1.SummaryTestInfoDao.getTestedList().then(function (rows) {
+            var res = new Array();
+            var tmpId = -1;
+            var summaryTestInfo = new summary_test_info_1.SummaryTestInfoDto();
+            var allInfos = rows;
+            allInfos.forEach(function (info) {
+                if (info.id !== tmpId) {
+                    tmpId = info.id;
+                    summaryTestInfo = new summary_test_info_1.SummaryTestInfoDto();
+                    summaryTestInfo.id = info.id;
+                    summaryTestInfo.title = info.title;
+                    summaryTestInfo.mainInfos = new Array();
+                    summaryTestInfo.costedTime = info.costedTime;
+                    summaryTestInfo.score = info.score,
+                        res.push(summaryTestInfo);
                 }
                 var mainInfo = new main_info_1.MainInfo();
                 mainInfo.id = info.mainId;

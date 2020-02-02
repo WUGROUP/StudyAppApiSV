@@ -6,5 +6,6 @@ export class SummaryTestInfoDto {
     public title!: string;
     public score!: number;
     public costTime!: number;
+    public costedTime!: number;
     public createdDate!: string;
 }

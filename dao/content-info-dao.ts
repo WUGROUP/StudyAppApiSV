@@ -1,5 +1,6 @@
 import { DbUtils } from "../db/dbutils";
 import { ContentInfo } from "../dto/content-info";
+import { TestInfo } from "../dto/test-info";
 
 export class ContentInfoDao {
 
@@ -53,13 +54,23 @@ export class ContentInfoDao {
                 VALUES 
     `;
 
-    public static DELETE_SQL = `
+    private static DELETE_SQL = `
         delete from contentInfo where id in (?)
     `;
 
-    public static UPDATE_SQL = `
+    private static UPDATE_SQL = `
         update  contentInfo set content=?,content1 =?,content2 =? where id = ?
     `;
+
+    private static INSERT_RES =
+        `
+        INSERT INTO  contentResInfo (
+            summaryId,
+            mainId,
+            contentId,
+            answer
+        ) VALUES
+    `
 
     public static selectByBookInfo(contentInfo: ContentInfo) {
         return new Promise((resolve, reject) => {
@@ -154,6 +165,32 @@ export class ContentInfoDao {
             db.close();
         }
         );
+    }
+
+    public static insertContentRes(res: TestInfo[]) {
+        let insertSQL = this.INSERT_RES;
+        for (let i = 0; i < res.length; i++) {
+            if (i > 0) {
+                insertSQL = insertSQL + ','
+            }
+            insertSQL = insertSQL + `(${res[i].summaryId},'${res[i].mainId}','${res[i].contentId}','${res[i].answer}')`
+        }
+        return new Promise((resolve, reject) => {
+            const db = DbUtils.DbInstance;
+            db.serialize(() => {
+                db.run(insertSQL, (error) => {
+                    if (error) {
+                        console.error('Error!', error);
+                        reject(error);
+                        return;
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+            db.close();
+        });
+
     }
 
 }
