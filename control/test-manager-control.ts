@@ -84,9 +84,9 @@ export class TestManagerControl extends BaseControl {
     }
 
     protected insert() {
-        const reqParam = this.req.body as { title: string, mainIds: number[] };
+        const reqParam = this.req.body as { title: string, countTimeFlg: number, mainIds: number[] };
         // insert summaryTestInfo
-        SummaryTestInfoDao.insert<number>(reqParam.title).then(
+        SummaryTestInfoDao.insert<number>(reqParam.title, reqParam.countTimeFlg).then(
             (id) => {
                 this.insertRelationInfo(id, reqParam.mainIds);
             }
@@ -117,6 +117,7 @@ export class TestManagerControl extends BaseControl {
                 let summaryTestInfo: SummaryTestInfoDto = new SummaryTestInfoDto();
                 const allInfos = rows as {
                     id: number,
+                    countTimeFlg: number,
                     title: string,
                     mainId: number,
                     mainTitle: string,
@@ -129,6 +130,7 @@ export class TestManagerControl extends BaseControl {
                         summaryTestInfo = new SummaryTestInfoDto();
                         summaryTestInfo.id = info.id;
                         summaryTestInfo.title = info.title;
+                        summaryTestInfo.countTimeFlg = info.countTimeFlg;
                         summaryTestInfo.mainInfos = new Array<MainInfo>();
                         res.push(summaryTestInfo);
                     }

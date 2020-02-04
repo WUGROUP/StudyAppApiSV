@@ -5,7 +5,7 @@ import { TestInfo } from "../dto/test-info";
 export class SummaryTestInfoDao {
 
     public static INSERT_SQL = `
-        insert into summaryTestInfo(title) values(?)
+        insert into summaryTestInfo(title,countTimeFlg) values(?,?)
     `;
 
     public static SELECT_CREATED_ID_SQL = `
@@ -15,6 +15,7 @@ export class SummaryTestInfoDao {
     public static SELECT_ALL_TODO_LIST = `
                 SELECT
                     a.id,
+                    a.countTimeFlg,
 					b.mainId,
                     a.title,
 				    a.score,
@@ -43,6 +44,7 @@ export class SummaryTestInfoDao {
     public static SELECT_ALL_TESTED_LIST = `
                 SELECT
                     a.id,
+                    a.countTimeFlg,
 					b.mainId,
                     a.title,
                     a.score,
@@ -112,11 +114,11 @@ export class SummaryTestInfoDao {
           id = ?
     `
 
-    public static insert<T>(title: string) {
+    public static insert<T>(title: string, flg: number) {
         return new Promise<T>((resolve, reject) => {
             const db = DbUtils.DbInstance;
             db.serialize(() => {
-                db.run(this.INSERT_SQL, [title], (error) => {
+                db.run(this.INSERT_SQL, [title, flg], (error) => {
                     if (error) {
                         db.close();
                         console.error('Error!', error);

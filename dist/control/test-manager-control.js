@@ -83,7 +83,7 @@ var TestManagerControl = /** @class */ (function (_super) {
         var _this = this;
         var reqParam = this.req.body;
         // insert summaryTestInfo
-        summary_test_info_dao_1.SummaryTestInfoDao.insert(reqParam.title).then(function (id) {
+        summary_test_info_dao_1.SummaryTestInfoDao.insert(reqParam.title, reqParam.countTimeFlg).then(function (id) {
             _this.insertRelationInfo(id, reqParam.mainIds);
         }).catch(function (error) {
             console.error(error);
@@ -109,6 +109,7 @@ var TestManagerControl = /** @class */ (function (_super) {
                     summaryTestInfo = new summary_test_info_1.SummaryTestInfoDto();
                     summaryTestInfo.id = info.id;
                     summaryTestInfo.title = info.title;
+                    summaryTestInfo.countTimeFlg = info.countTimeFlg;
                     summaryTestInfo.mainInfos = new Array();
                     res.push(summaryTestInfo);
                 }
