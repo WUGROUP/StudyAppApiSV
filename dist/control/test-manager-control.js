@@ -138,6 +138,7 @@ var TestManagerControl = /** @class */ (function (_super) {
                     summaryTestInfo = new summary_test_info_1.SummaryTestInfoDto();
                     summaryTestInfo.id = info.id;
                     summaryTestInfo.title = info.title;
+                    summaryTestInfo.countTimeFlg = info.countTimeFlg;
                     summaryTestInfo.mainInfos = new Array();
                     summaryTestInfo.costedTime = info.costedTime;
                     summaryTestInfo.score = info.score,

@@ -157,6 +157,7 @@ export class TestManagerControl extends BaseControl {
                 let summaryTestInfo: SummaryTestInfoDto = new SummaryTestInfoDto();
                 const allInfos = rows as {
                     id: number,
+                    countTimeFlg: number,
                     title: string,
                     mainId: number,
                     mainTitle: string,
@@ -171,6 +172,7 @@ export class TestManagerControl extends BaseControl {
                         summaryTestInfo = new SummaryTestInfoDto();
                         summaryTestInfo.id = info.id;
                         summaryTestInfo.title = info.title;
+                        summaryTestInfo.countTimeFlg = info.countTimeFlg;
                         summaryTestInfo.mainInfos = new Array<MainInfo>();
                         summaryTestInfo.costedTime = info.costedTime;
                         summaryTestInfo.score = info.score,
