@@ -39,7 +39,7 @@ var ContentInfoDao = /** @class */ (function () {
             if (i > 0) {
                 insertSQL = insertSQL + ',';
             }
-            insertSQL = insertSQL + ("(" + contentInfos[i].mainId + ",'" + contentInfos[i].content + "','" + contentInfos[i].content1 + "','" + contentInfos[i].content2 + "')");
+            insertSQL = insertSQL + ("(" + contentInfos[i].mainId + ",'" + dbutils_1.DbUtils.escParam(contentInfos[i].content) + "','" + dbutils_1.DbUtils.escParam(contentInfos[i].content1) + "','" + dbutils_1.DbUtils.escParam(contentInfos[i].content2) + "')");
         }
         return new Promise(function (resolve, reject) {
             var db = dbutils_1.DbUtils.DbInstance;
@@ -103,7 +103,7 @@ var ContentInfoDao = /** @class */ (function () {
             if (i > 0) {
                 insertSQL = insertSQL + ',';
             }
-            insertSQL = insertSQL + ("(" + res[i].summaryId + ",'" + res[i].mainId + "','" + res[i].contentId + "','" + res[i].answer + "')");
+            insertSQL = insertSQL + ("(" + res[i].summaryId + ",'" + res[i].mainId + "','" + res[i].contentId + "','" + dbutils_1.DbUtils.escParam(res[i].answer) + "')");
         }
         return new Promise(function (resolve, reject) {
             var db = dbutils_1.DbUtils.DbInstance;

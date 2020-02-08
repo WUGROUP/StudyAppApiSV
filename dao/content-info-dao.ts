@@ -107,7 +107,7 @@ export class ContentInfoDao {
             if (i > 0) {
                 insertSQL = insertSQL + ','
             }
-            insertSQL = insertSQL + `(${contentInfos[i].mainId},'${contentInfos[i].content}','${contentInfos[i].content1}','${contentInfos[i].content2}')`
+            insertSQL = insertSQL + `(${contentInfos[i].mainId},'${DbUtils.escParam(contentInfos[i].content)}','${DbUtils.escParam(contentInfos[i].content1)}','${DbUtils.escParam(contentInfos[i].content2)}')`
         }
 
         return new Promise((resolve, reject) => {
@@ -173,7 +173,7 @@ export class ContentInfoDao {
             if (i > 0) {
                 insertSQL = insertSQL + ','
             }
-            insertSQL = insertSQL + `(${res[i].summaryId},'${res[i].mainId}','${res[i].contentId}','${res[i].answer}')`
+            insertSQL = insertSQL + `(${res[i].summaryId},'${res[i].mainId}','${res[i].contentId}','${DbUtils.escParam(res[i].answer)}')`
         }
         return new Promise((resolve, reject) => {
             const db = DbUtils.DbInstance;
