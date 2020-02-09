@@ -12,6 +12,6 @@ export class DbUtils {
         if (isNullOrUndefined(param)) {
             return '';
         }
-        return param.replace(`/'/g`, `''`);
+        return param.replace(/'/g, `''`);
     }
 }

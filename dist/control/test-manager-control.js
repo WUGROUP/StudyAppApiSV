@@ -50,7 +50,8 @@ var TestManagerControl = /** @class */ (function (_super) {
         var _this = this;
         summary_test_info_dao_1.SummaryTestInfoDao.getTestInfosById(this.req.body).then(function (res) {
             _this.res.json(res);
-        }).catch(function () {
+        }).catch(function (error) {
+            console.error(error);
             _this.res.sendStatus(500);
         });
     };
@@ -59,7 +60,8 @@ var TestManagerControl = /** @class */ (function (_super) {
         var resInfo = this.req.body;
         summary_test_info_dao_1.SummaryTestInfoDao.updateTestResById(resInfo).then(function () {
             _this.saveContentsRes(resInfo.res);
-        }).catch(function () {
+        }).catch(function (error) {
+            console.error(error);
             _this.res.sendStatus(500);
         });
     };
@@ -67,7 +69,8 @@ var TestManagerControl = /** @class */ (function (_super) {
         var _this = this;
         content_info_dao_1.ContentInfoDao.insertContentRes(res).then(function () {
             _this.res.json(true);
-        }).catch(function () {
+        }).catch(function (error) {
+            console.error(error);
             _this.res.sendStatus(500);
         });
     };
@@ -93,6 +96,7 @@ var TestManagerControl = /** @class */ (function (_super) {
     TestManagerControl.prototype.insertRelationInfo = function (id, mainIds) {
         var _this = this;
         test_relation_info_dao_1.TestRelationInfo.insert(id, mainIds).then(function () { return _this.res.send(_this.OK_RES); }).catch(function (error) {
+            console.error(error);
             _this.res.sendStatus(500);
         });
     };
@@ -122,6 +126,7 @@ var TestManagerControl = /** @class */ (function (_super) {
             });
             _this.res.json(res);
         }, function (error) {
+            console.error(error);
             _this.res.sendStatus(500);
         });
     };
@@ -153,6 +158,7 @@ var TestManagerControl = /** @class */ (function (_super) {
             });
             _this.res.json(res);
         }, function (error) {
+            console.error(error);
             _this.res.sendStatus(500);
         });
     };

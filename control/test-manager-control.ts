@@ -39,7 +39,8 @@ export class TestManagerControl extends BaseControl {
                 this.res.json(res);
             }
         ).catch(
-            () => {
+            (error) => {
+                console.error(error);
                 this.res.sendStatus(500);
             }
         )
@@ -52,7 +53,8 @@ export class TestManagerControl extends BaseControl {
                 this.saveContentsRes(resInfo.res);
             }
         ).catch(
-            () => {
+            (error) => {
+                console.error(error);
                 this.res.sendStatus(500);
             }
         )
@@ -65,7 +67,8 @@ export class TestManagerControl extends BaseControl {
                 this.res.json(true);
             }
         ).catch(
-            () => {
+            (error) => {
+                console.error(error);
                 this.res.sendStatus(500);
             }
         )
@@ -104,6 +107,7 @@ export class TestManagerControl extends BaseControl {
             () => this.res.send(this.OK_RES)
         ).catch(
             (error) => {
+                console.error(error);
                 this.res.sendStatus(500);
             }
         )
@@ -144,6 +148,7 @@ export class TestManagerControl extends BaseControl {
                 this.res.json(res);
             },
             (error) => {
+                console.error(error);
                 this.res.sendStatus(500);
             }
         )
@@ -188,6 +193,7 @@ export class TestManagerControl extends BaseControl {
                 this.res.json(res);
             },
             (error) => {
+                console.error(error);
                 this.res.sendStatus(500);
             }
         )
