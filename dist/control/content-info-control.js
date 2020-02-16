@@ -68,6 +68,13 @@ var ContentInfoControl = /** @class */ (function (_super) {
         mainInfo.bookId = saveInfo.bookId;
         mainInfo.courseIndex = saveInfo.courseIndex;
         mainInfo.type = saveInfo.type;
+        // 選択型
+        if (saveInfo.type === 3) {
+            for (var i = 0; i < saveInfo.infos.length; i++) {
+                var contentInfo = saveInfo.infos[i];
+                contentInfo.content1 = JSON.stringify(contentInfo.selectItems);
+            }
+        }
         main_info_dao_1.MainInfoDao.selectByBookInfo(mainInfo).then(function (rows) {
             var tmp = rows;
             if (tmp.length > 0) {

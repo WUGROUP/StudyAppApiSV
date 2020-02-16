@@ -24,6 +24,7 @@ export class SummaryTestInfoDao {
                     c.type,
                 case when c.type=1 then (select count(*) from contentInfo d where b.mainId=d.mainId and c.type = 1) 
                 when c.type = 2 then (select count(*) from contentInfo e where b.mainId=e.mainId and c.type = 2)
+                when c.type = 3 then (select count(*) from contentInfo e where b.mainId=e.mainId and c.type = 3)
                 end as contentsCount
                 FROM
                     summaryTestInfo a
@@ -54,6 +55,7 @@ export class SummaryTestInfoDao {
                     c.type,
                 case when c.type=1 then (select count(*) from contentInfo d where b.mainId=d.mainId and c.type = 1) 
                 when c.type = 2 then (select count(*) from contentInfo e where b.mainId=e.mainId and c.type = 2)
+                when c.type = 3 then (select count(*) from contentInfo e where b.mainId=e.mainId and c.type = 3)
                 end as contentsCount
                 FROM
                     summaryTestInfo a

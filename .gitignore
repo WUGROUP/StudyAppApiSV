@@ -1,3 +1,13 @@
 node_modules/
 dist/
 *.db
+dist/control/content-info-control.js
+dist/control/content-info-control.js.map
+dist/control/test-manager-control.js
+dist/control/test-manager-control.js.map
+dist/dao/summary-test-info-dao.js
+dist/dao/summary-test-info-dao.js.map
+dist/dao/test-manager-dao.js
+dist/dao/test-manager-dao.js.map
+dist/dto/content-info.js
+dist/dto/content-info.js.map

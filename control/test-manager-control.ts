@@ -27,11 +27,13 @@ export class TestManagerControl extends BaseControl {
             case 'TESTED_LIST':
                 this.getAllTestedList();
                 return;
+            case 'GET_ALL_TESTED_INFO_BY_ID':
+                this.getAllTestedInfosById();
+                return;
             default:
                 return
         }
     }
-
 
     protected getAllTestInfos() {
         SummaryTestInfoDao.getTestInfosById(this.req.body).then(
@@ -197,5 +199,19 @@ export class TestManagerControl extends BaseControl {
                 this.res.sendStatus(500);
             }
         )
+    }
+
+    private getAllTestedInfosById() {
+        const reqParam = this.req.body as { id: number };
+        TestManagerDao.getAllTestedInfosById(reqParam.id).then(
+            (rows) => {
+                this.res.json(rows);
+            }
+        ).catch(
+            (error) => {
+                console.error(error);
+                this.res.sendStatus(500);
+            }
+        );
     }
 }

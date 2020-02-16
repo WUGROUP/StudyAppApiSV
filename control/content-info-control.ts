@@ -6,7 +6,6 @@ import { MainInfo } from "../dto/main-info";
 import { MainInfoDao } from "../dao/main-info-dao";
 import { isNullOrUndefined } from "util";
 import { AppUtils } from "../utils/app-utils";
-import { TextBoxInfo } from "../dto/text-box";
 
 export class ContentInfoControl extends BaseControl {
 
@@ -73,6 +72,14 @@ export class ContentInfoControl extends BaseControl {
         mainInfo.bookId = saveInfo.bookId;
         mainInfo.courseIndex = saveInfo.courseIndex;
         mainInfo.type = saveInfo.type;
+
+        // 選択型
+        if (saveInfo.type === 3) {
+            for (let i = 0; i < saveInfo.infos.length; i++) {
+                const contentInfo = saveInfo.infos[i];
+                contentInfo.content1 = JSON.stringify(contentInfo.selectItems);
+            }
+        }
 
         MainInfoDao.selectByBookInfo(mainInfo).then(
             (rows) => {

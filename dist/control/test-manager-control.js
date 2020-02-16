@@ -42,6 +42,9 @@ var TestManagerControl = /** @class */ (function (_super) {
             case 'TESTED_LIST':
                 this.getAllTestedList();
                 return;
+            case 'GET_ALL_TESTED_INFO_BY_ID':
+                this.getAllTestedInfosById();
+                return;
             default:
                 return;
         }
@@ -158,6 +161,16 @@ var TestManagerControl = /** @class */ (function (_super) {
             });
             _this.res.json(res);
         }, function (error) {
+            console.error(error);
+            _this.res.sendStatus(500);
+        });
+    };
+    TestManagerControl.prototype.getAllTestedInfosById = function () {
+        var _this = this;
+        var reqParam = this.req.body;
+        test_manager_dao_1.TestManagerDao.getAllTestedInfosById(reqParam.id).then(function (rows) {
+            _this.res.json(rows);
+        }).catch(function (error) {
             console.error(error);
             _this.res.sendStatus(500);
         });
